@@ -71,31 +71,31 @@
                             @php
                                 $label = $location->number;
 
-                                $futureBooking = $location->brands
-                                    ->filter(
-                                        fn($b) => $b->id !== $brand->id &&
-                                            \Carbon\Carbon::parse($b->pivot->start_date)->isFuture(),
-                                    )
+                                $bookings = $location->brands
+                                    ->filter(fn($b) => $b->id !== $brand->id)
                                     ->sortBy('pivot.start_date')
-                                    ->first();
+                                    ->values();
 
-                                $currentBooking = $location->brands
-                                    ->filter(
-                                        fn($b) => $b->id !== $brand->id &&
-                                            \Carbon\Carbon::parse($b->pivot->start_date)->lte(now()) &&
-                                            \Carbon\Carbon::parse($b->pivot->end_date)->gte(now()),
-                                    )
-                                    ->sortByDesc('pivot.end_date')
-                                    ->first();
+                                $nextAvailableDate = now();
 
-                                if ($currentBooking) {
-                                    $availableFrom = \Carbon\Carbon::parse($currentBooking->pivot->end_date)->addDay();
-                                    $label .= ' (available from ' . $availableFrom->toDateString() . ')';
-                                } elseif ($futureBooking) {
-                                    $label .=
-                                        ' (busy from ' .
-                                        \Carbon\Carbon::parse($futureBooking->pivot->start_date)->toDateString() .
-                                        ')';
+                                foreach ($bookings as $booking) {
+                                    $start = \Carbon\Carbon::parse($booking->pivot->start_date);
+                                    $end = \Carbon\Carbon::parse($booking->pivot->end_date);
+
+                                    if ($start->gt(now())) {
+                                        if ($nextAvailableDate->lt($start)) {
+                                            $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
+                                            break;
+                                        } else {
+                                            $nextAvailableDate = $end->copy()->addDay();
+                                        }
+                                    } elseif ($end->gt(now())) {
+                                        $nextAvailableDate = $end->copy()->addDay();
+                                    }
+                                }
+
+                                if (!str_contains($label, 'available')) {
+                                    $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
                                 }
                             @endphp
 
