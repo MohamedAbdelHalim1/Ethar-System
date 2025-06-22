@@ -76,26 +76,29 @@
                                     ->sortBy('pivot.start_date')
                                     ->values();
 
-                                $nextAvailableDate = now();
+                                if ($bookings->isNotEmpty()) {
+                                    $nextAvailableDate = now();
 
-                                foreach ($bookings as $booking) {
-                                    $start = \Carbon\Carbon::parse($booking->pivot->start_date);
-                                    $end = \Carbon\Carbon::parse($booking->pivot->end_date);
+                                    foreach ($bookings as $booking) {
+                                        $start = \Carbon\Carbon::parse($booking->pivot->start_date);
+                                        $end = \Carbon\Carbon::parse($booking->pivot->end_date);
 
-                                    if ($start->gt(now())) {
-                                        if ($nextAvailableDate->lt($start)) {
-                                            $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
-                                            break;
-                                        } else {
+                                        if ($start->gt(now())) {
+                                            if ($nextAvailableDate->lt($start)) {
+                                                $label .=
+                                                    ' (available from ' . $nextAvailableDate->toDateString() . ')';
+                                                break;
+                                            } else {
+                                                $nextAvailableDate = $end->copy()->addDay();
+                                            }
+                                        } elseif ($end->gt(now())) {
                                             $nextAvailableDate = $end->copy()->addDay();
                                         }
-                                    } elseif ($end->gt(now())) {
-                                        $nextAvailableDate = $end->copy()->addDay();
                                     }
-                                }
 
-                                if (!str_contains($label, 'available')) {
-                                    $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
+                                    if (!str_contains($label, 'available')) {
+                                        $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
+                                    }
                                 }
                             @endphp
 
@@ -104,6 +107,7 @@
                                 {{ $label }}
                             </option>
                         @endforeach
+
                     </select>
                 </div>
 
