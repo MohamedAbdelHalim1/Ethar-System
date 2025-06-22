@@ -76,31 +76,26 @@
                                     ->sortBy('pivot.start_date')
                                     ->values();
 
-                                if ($bookings->isNotEmpty()) {
-                                    $nextAvailableDate = now();
+                                $nextAvailableDate = now();
 
-                                    foreach ($bookings as $booking) {
-                                        $start = \Carbon\Carbon::parse($booking->pivot->start_date);
-                                        $end = \Carbon\Carbon::parse($booking->pivot->end_date);
+                                foreach ($bookings as $booking) {
+                                    $start = \Carbon\Carbon::parse($booking->pivot->start_date);
+                                    $end = \Carbon\Carbon::parse($booking->pivot->end_date);
 
-                                        if ($start->gt(now())) {
-                                            if ($nextAvailableDate->lt($start)) {
-                                                $label .=
-                                                    ' (available from ' . $nextAvailableDate->toDateString() . ')';
-                                                break;
-                                            } else {
-                                                $nextAvailableDate = $end->copy()->addDay();
-                                            }
-                                        } elseif ($end->gt(now())) {
-                                            $nextAvailableDate = $end->copy()->addDay();
-                                        }
+                                    if ($start->gt($nextAvailableDate)) {
+                                        // في فراغ بين الوقت المتاح والحجز اللي جاي
+                                        break;
                                     }
 
-                                    if (!str_contains($label, 'available')) {
-                                        $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
+                                    if ($end->gte($nextAvailableDate)) {
+                                        // المكان مشغول، فحنأجل التاريخ لبعد نهاية الحجز
+                                        $nextAvailableDate = $end->copy()->addDay();
                                     }
                                 }
+
+                                $label .= ' (available from ' . $nextAvailableDate->toDateString() . ')';
                             @endphp
+
 
                             <option value="{{ $location->id }}"
                                 {{ $brand->locations->first()?->id == $location->id ? 'selected' : '' }}>
