@@ -10,12 +10,14 @@ class Location extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id',       // مهم طالما بنعمل seeder يحدد ID
-        'brand_id',
+        'number', 
     ];
 
-    public function brand()
+
+    public function brands()
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsToMany(Brand::class, 'brand_location')
+            ->withPivot(['start_date', 'end_date'])
+            ->withTimestamps();
     }
 }

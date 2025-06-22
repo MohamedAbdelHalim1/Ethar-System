@@ -20,7 +20,7 @@ class BrandController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $availableLocations = Location::whereNull('brand_id')->get();
+        $availableLocations = Location::with(['brands'])->get();
         $durations = [
             'day' => '1 Day',
             '2days' => '2 Days',
@@ -76,9 +76,27 @@ class BrandController extends Controller
                 'drive_link' => $request->drive_link,
             ]);
 
-            $location = Location::findOrFail($request->location_id);
-            $location->brand_id = $brand->id;
-            $location->save();
+            $conflict = \DB::table('brand_location')
+                ->where('location_id', $request->location_id)
+                ->where(function ($q) use ($startDate, $endDate) {
+                    $q->whereBetween('start_date', [$startDate, $endDate])
+                        ->orWhereBetween('end_date', [$startDate, $endDate])
+                        ->orWhere(function ($q2) use ($startDate, $endDate) {
+                            $q2->where('start_date', '<', $startDate)
+                                ->where('end_date', '>', $endDate);
+                        });
+                })
+                ->exists();
+
+            if ($conflict) {
+                return back()->withErrors(['location_id' => 'This location is already booked in that date range.']);
+            }
+
+            $brand->locations()->attach($request->location_id, [
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+            ]);
+
 
             return redirect()->route('dashboard')->with('success', 'Brand added successfully.');
         } catch (Throwable $e) {
@@ -104,7 +122,7 @@ class BrandController extends Controller
         ];
 
 
-        
+
 
         return view('brands.edit', compact('brand', 'categories', 'availableLocations', 'durations'));
     }

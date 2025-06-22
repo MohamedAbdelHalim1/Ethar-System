@@ -47,8 +47,39 @@
                     <select name="location_id" id="location_id" class="w-full border rounded px-3 py-2" required>
                         <option value="">Select a location</option>
                         @foreach ($availableLocations as $location)
-                            <option value="{{ $location->id }}">{{ $location->id }}</option>
+                            @php
+                                $label = $location->number;
+
+                                // لو فيه حجوزات للـ location
+                                $futureBooking = $location->brands
+                                    ->filter(fn($brand) => \Carbon\Carbon::parse($brand->pivot->start_date)->isFuture())
+                                    ->sortBy('pivot.start_date')
+                                    ->first();
+
+                                $currentBooking = $location->brands
+                                    ->filter(
+                                        fn($brand) => \Carbon\Carbon::parse($brand->pivot->start_date)->lte(now()) &&
+                                            \Carbon\Carbon::parse($brand->pivot->end_date)->gte(now()),
+                                    )
+                                    ->sortByDesc('pivot.end_date')
+                                    ->first();
+
+                                if ($currentBooking) {
+                                    $availableFrom = \Carbon\Carbon::parse($currentBooking->pivot->end_date)->addDay();
+                                    $label .= ' (available from ' . $availableFrom->toDateString() . ')';
+                                } elseif ($futureBooking) {
+                                    $label .=
+                                        ' (busy from ' .
+                                        \Carbon\Carbon::parse($futureBooking->pivot->start_date)->toDateString() .
+                                        ')';
+                                }
+                            @endphp
+
+                            <option value="{{ $location->id }}">{{ $label }}</option>
                         @endforeach
+
+
+
                     </select>
                 </div>
                 <!-- Drive Link -->

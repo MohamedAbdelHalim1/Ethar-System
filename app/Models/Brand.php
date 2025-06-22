@@ -23,8 +23,10 @@ class Brand extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function location()
+    public function locations()
     {
-        return $this->hasOne(Location::class);
+        return $this->belongsToMany(Location::class, 'brand_location')
+            ->withPivot(['start_date', 'end_date'])
+            ->withTimestamps();
     }
 }
