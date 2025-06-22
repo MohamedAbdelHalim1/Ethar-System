@@ -2,13 +2,24 @@
     <div class="py-6 max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded p-6">
             <h2 class="text-xl font-semibold mb-4">Add New Brand</h2>
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('brands.store') }}" x-data="{ showDates: false }">
                 @csrf
 
                 <!-- Brand Name -->
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700">Brand Name</label>
-                    <input type="text" name="name" id="name" class="w-full border rounded px-3 py-2" required>
+                    <input type="text" name="name" id="name" class="w-full border rounded px-3 py-2"
+                        required>
                 </div>
 
                 <!-- Category -->
