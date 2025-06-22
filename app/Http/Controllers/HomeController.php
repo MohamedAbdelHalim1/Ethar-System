@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $brands = Brand::with(['category', 'location'])->get();
+        $brands = Brand::with(['category', 'locations'])->get();
         return view('dashboard', compact('brands'));
     }
 }

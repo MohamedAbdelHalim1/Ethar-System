@@ -59,7 +59,13 @@
                                 </td>
 
 
-                                <td>{{ $brand->location->id ?? '-' }}</td>
+                                <td>
+                                    @if ($brand->locations->count())
+                                        {{ $brand->locations->pluck('number')->join(', ') }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     @if ($brand->drive_link)
                                         <a href="{{ $brand->drive_link }}" target="_blank"
