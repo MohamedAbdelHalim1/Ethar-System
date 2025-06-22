@@ -71,10 +71,7 @@
                             @php
                                 $label = $location->number;
 
-                                $bookings = $location->brands
-                                    ->filter(fn($b) => $b->id !== $brand->id)
-                                    ->sortBy('pivot.start_date')
-                                    ->values();
+                                $bookings = collect($location->brands)->sortBy('pivot.start_date')->values();
 
                                 $nextAvailableDate = now();
 
