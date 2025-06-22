@@ -22,15 +22,16 @@ class BrandController extends Controller
         $categories = Category::all();
         $availableLocations = Location::with(['brands'])->get();
         $durations = [
-            'day' => '1 Day',
-            '2days' => '2 Days',
-            '3days' => '3 Days',
-            'week' => '1 Week',
-            '15days' => '15 Days',
-            'month' => '1 Month',
-            '2months' => '2 Months',
-            '3months' => '3 Months',
+            '1 Day' => '1 Day',
+            '2 Days' => '2 Days',
+            '3 Days' => '3 Days',
+            '1 Week' => '1 Week',
+            '15 Days' => '15 Days',
+            '1 Month' => '1 Month',
+            '2 Months' => '2 Months',
+            '3 Months' => '3 Months',
         ];
+
 
         return view('brands.create', compact('categories', 'availableLocations', 'durations'));
     }
@@ -103,15 +104,16 @@ class BrandController extends Controller
         $availableLocations = Location::with(['brands'])->get();
 
         $durations = [
-            'day' => '1 Day',
-            '2days' => '2 Days',
-            '3days' => '3 Days',
-            'week' => '1 Week',
-            '15days' => '15 Days',
-            'month' => '1 Month',
-            '2months' => '2 Months',
-            '3months' => '3 Months',
+            '1 Day' => '1 Day',
+            '2 Days' => '2 Days',
+            '3 Days' => '3 Days',
+            '1 Week' => '1 Week',
+            '15 Days' => '15 Days',
+            '1 Month' => '1 Month',
+            '2 Months' => '2 Months',
+            '3 Months' => '3 Months',
         ];
+
 
         return view('brands.edit', compact('brand', 'categories', 'availableLocations', 'durations'));
     }

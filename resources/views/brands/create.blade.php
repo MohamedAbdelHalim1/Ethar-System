@@ -39,9 +39,13 @@
                     <select name="subscription_duration" id="duration" class="w-full border rounded px-3 py-2"
                         @change="showDates = ($event.target.value !== '')" required>
                         <option value="">Select a duration</option>
-                        @foreach ($durations as $duration)
-                            <option value="{{ $duration }}">{{ $duration }}</option>
+                        @foreach ($durations as $key => $label)
+                            <option value="{{ $key }}"
+                                {{ old('subscription_duration') == $key ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
                         @endforeach
+
                     </select>
                 </div>
 

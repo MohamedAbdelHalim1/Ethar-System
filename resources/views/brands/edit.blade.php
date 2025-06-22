@@ -50,7 +50,6 @@
                                 {{ $label }}
                             </option>
                         @endforeach
-
                     </select>
                 </div>
 
