@@ -43,23 +43,10 @@ class BrandController extends Controller
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
                 'subscription_duration' => 'required|string',
-                'location_id' => 'required|exists:locations,id'
+                'location_id' => 'required|exists:locations,id',
             ]);
 
-            $durations = [
-                'day' => 1,
-                '2days' => 2,
-                '3days' => 3,
-                'week' => 7,
-                '15days' => 15,
-                'month' => 30,
-                '2months' => 60,
-                '3months' => 90,
-            ];
-
             $range = explode(' to ', $request->date_range);
-
-            // تأكد من أن النتيجة فيها قيمتين فعلاً
             if (count($range) !== 2) {
                 throw new \Exception("Invalid date range: " . $request->date_range);
             }
@@ -67,48 +54,53 @@ class BrandController extends Controller
             $startDate = Carbon::parse($range[0]);
             $endDate = Carbon::parse($range[1]);
 
-            $brand = Brand::create([
-                'name' => $request->name,
-                'category_id' => $request->category_id,
-                'subscription_duration' => $request->subscription_duration,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'drive_link' => $request->drive_link,
-            ]);
+            return \DB::transaction(function () use ($request, $startDate, $endDate) {
 
-            $conflict = \DB::table('brand_location')
-                ->where('location_id', $request->location_id)
-                ->where(function ($q) use ($startDate, $endDate) {
-                    $q->whereBetween('start_date', [$startDate, $endDate])
-                        ->orWhereBetween('end_date', [$startDate, $endDate])
-                        ->orWhere(function ($q2) use ($startDate, $endDate) {
-                            $q2->where('start_date', '<', $startDate)
-                                ->where('end_date', '>', $endDate);
-                        });
-                })
-                ->exists();
+                $conflict = \DB::table('brand_location')
+                    ->where('location_id', $request->location_id)
+                    ->where(function ($q) use ($startDate, $endDate) {
+                        $q->whereBetween('start_date', [$startDate, $endDate])
+                            ->orWhereBetween('end_date', [$startDate, $endDate])
+                            ->orWhere(function ($q2) use ($startDate, $endDate) {
+                                $q2->where('start_date', '<', $startDate)
+                                    ->where('end_date', '>', $endDate);
+                            });
+                    })
+                    ->exists();
 
-            if ($conflict) {
-                return back()->withErrors(['location_id' => 'This location is already booked in that date range.']);
-            }
+                if ($conflict) {
+                    // Throw exception to rollback transaction
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'location_id' => 'This location is already booked in that date range.',
+                    ]);
+                }
 
-            $brand->locations()->attach($request->location_id, [
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-            ]);
+                $brand = Brand::create([
+                    'name' => $request->name,
+                    'category_id' => $request->category_id,
+                    'subscription_duration' => $request->subscription_duration,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'drive_link' => $request->drive_link,
+                ]);
 
+                $brand->locations()->attach($request->location_id, [
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
 
-            return redirect()->route('dashboard')->with('success', 'Brand added successfully.');
+                return redirect()->route('dashboard')->with('success', 'Brand added successfully.');
+            });
         } catch (Throwable $e) {
-            // تطبع الخطأ للتصحيح
-            dd($e->getMessage(), $e->getTraceAsString());
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
     public function edit(Brand $brand)
     {
         $categories = Category::all();
-        $availableLocations = Location::whereNull('brand_id')->orWhere('brand_id', $brand->id)->get();
+        $availableLocations = Location::with(['brands'])->get();
 
         $durations = [
             'day' => '1 Day',
@@ -121,11 +113,9 @@ class BrandController extends Controller
             '3months' => '3 Months',
         ];
 
-
-
-
         return view('brands.edit', compact('brand', 'categories', 'availableLocations', 'durations'));
     }
+
 
 
 
@@ -136,11 +126,10 @@ class BrandController extends Controller
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
                 'subscription_duration' => 'required|string',
-                'location_id' => 'required|exists:locations,id'
+                'location_id' => 'required|exists:locations,id',
             ]);
 
             $range = explode(' to ', $request->date_range);
-
             if (count($range) !== 2) {
                 throw new \Exception("Invalid date range: " . $request->date_range);
             }
@@ -148,27 +137,52 @@ class BrandController extends Controller
             $startDate = \Carbon\Carbon::parse($range[0]);
             $endDate = \Carbon\Carbon::parse($range[1]);
 
-            $brand->update([
-                'name' => $request->name,
-                'category_id' => $request->category_id,
-                'subscription_duration' => $request->subscription_duration,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'drive_link' => $request->drive_link,
-            ]);
+            return \DB::transaction(function () use ($request, $brand, $startDate, $endDate) {
 
-            // Free previous location
-            \App\Models\Location::where('brand_id', $brand->id)->update(['brand_id' => null]);
+                $conflict = \DB::table('brand_location')
+                    ->where('location_id', $request->location_id)
+                    ->where('brand_id', '!=', $brand->id) // استثناء البراند الحالي
+                    ->where(function ($q) use ($startDate, $endDate) {
+                        $q->whereBetween('start_date', [$startDate, $endDate])
+                            ->orWhereBetween('end_date', [$startDate, $endDate])
+                            ->orWhere(function ($q2) use ($startDate, $endDate) {
+                                $q2->where('start_date', '<', $startDate)
+                                    ->where('end_date', '>', $endDate);
+                            });
+                    })
+                    ->exists();
 
-            $location = \App\Models\Location::findOrFail($request->location_id);
-            $location->brand_id = $brand->id;
-            $location->save();
+                if ($conflict) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'location_id' => 'This location is already booked in that date range.',
+                    ]);
+                }
 
-            return redirect()->route('dashboard')->with('success', 'Brand updated successfully.');
+                $brand->update([
+                    'name' => $request->name,
+                    'category_id' => $request->category_id,
+                    'subscription_duration' => $request->subscription_duration,
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                    'drive_link' => $request->drive_link,
+                ]);
+
+                // Remove old pivot if any
+                $brand->locations()->detach();
+
+                // Add new location with updated pivot
+                $brand->locations()->attach($request->location_id, [
+                    'start_date' => $startDate,
+                    'end_date' => $endDate,
+                ]);
+
+                return redirect()->route('dashboard')->with('success', 'Brand updated successfully.');
+            });
         } catch (\Throwable $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
+
 
 
     public function destroy(Brand $brand)

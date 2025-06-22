@@ -2,6 +2,16 @@
     <div class="py-6 max-w-3xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white shadow-md rounded p-6">
             <h2 class="text-xl font-semibold mb-4">Edit Brand</h2>
+            @if ($errors->any())
+                <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('brands.update', $brand->id) }}" x-data="{ showDates: true }">
                 @csrf
                 @method('PUT')
@@ -59,9 +69,40 @@
                     <select name="location_id" id="location_id" class="w-full border rounded px-3 py-2" required>
                         <option value="">Select a location</option>
                         @foreach ($availableLocations as $location)
+                            @php
+                                $label = $location->number;
+
+                                $futureBooking = $location->brands
+                                    ->filter(
+                                        fn($b) => $b->id !== $brand->id &&
+                                            \Carbon\Carbon::parse($b->pivot->start_date)->isFuture(),
+                                    )
+                                    ->sortBy('pivot.start_date')
+                                    ->first();
+
+                                $currentBooking = $location->brands
+                                    ->filter(
+                                        fn($b) => $b->id !== $brand->id &&
+                                            \Carbon\Carbon::parse($b->pivot->start_date)->lte(now()) &&
+                                            \Carbon\Carbon::parse($b->pivot->end_date)->gte(now()),
+                                    )
+                                    ->sortByDesc('pivot.end_date')
+                                    ->first();
+
+                                if ($currentBooking) {
+                                    $availableFrom = \Carbon\Carbon::parse($currentBooking->pivot->end_date)->addDay();
+                                    $label .= ' (available from ' . $availableFrom->toDateString() . ')';
+                                } elseif ($futureBooking) {
+                                    $label .=
+                                        ' (busy from ' .
+                                        \Carbon\Carbon::parse($futureBooking->pivot->start_date)->toDateString() .
+                                        ')';
+                                }
+                            @endphp
+
                             <option value="{{ $location->id }}"
-                                {{ $brand->location?->id == $location->id ? 'selected' : '' }}>
-                                {{ $location->id }}
+                                {{ $brand->locations->first()?->id == $location->id ? 'selected' : '' }}>
+                                {{ $label }}
                             </option>
                         @endforeach
                     </select>
