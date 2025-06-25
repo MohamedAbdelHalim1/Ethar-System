@@ -35,8 +35,14 @@
     </div>
     @push('scripts')
         <script>
-            console.log('Locations page script loaded ✅');
+            $(document).ready(function() {
+                const table3 = document.getElementById('locations-table');
+                if (table3) {
+                    $('#locations-table').DataTable();
+                }
+            });
         </script>
     @endpush
+
 
 </x-app-layout>
