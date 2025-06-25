@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th>Location Number</th>
-                        <th>Upcoming Bookings</th>
+                        <th class="text-left">Upcoming Bookings</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -20,7 +20,7 @@
                         @endphp
                         <tr>
                             <td>{{ $location->number }}</td>
-                            <td>{{ $upcomingBookings }}</td>
+                            <td class="text-left">{{ $upcomingBookings }}</td>
                             <td>
                                 <a href="{{ route('locations.calendar', $location->id) }}"
                                     class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">
