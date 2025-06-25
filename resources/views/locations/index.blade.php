@@ -3,7 +3,7 @@
         <div class="bg-white shadow-md rounded p-6">
             <h2 class="text-xl font-semibold mb-4">All Locations</h2>
 
-            <table class="min-w-full">
+            <table id="locations-table"  class="min-w-full">
                 <thead>
                     <tr>
                         <th>Location Number</th>

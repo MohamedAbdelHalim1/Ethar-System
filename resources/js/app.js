@@ -34,4 +34,9 @@ $(document).ready(function () {
     if (table2) {
         $('#brands-table').DataTable();
     }
+
+    const table3 = document.getElementById('locations-table');
+    if (table3) {
+        $('#locations-table').DataTable();
+    }
 });
