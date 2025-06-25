@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('categories', CategoryController::class);
     Route::resource('brands', BrandController::class);
+    Route::get('/locations', [LocationController::class, 'index'])->name('locations.index');
+    Route::get('/locations/{location}/calendar', [LocationController::class, 'calendar'])->name('locations.calendar');
 });
 
 require __DIR__ . '/auth.php';
