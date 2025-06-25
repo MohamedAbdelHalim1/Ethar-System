@@ -34,6 +34,15 @@
         </div>
     </div>
     @push('scripts')
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+        <!-- DataTables JS -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
         <script>
             $(document).ready(function() {
                 const table3 = document.getElementById('locations-table');
