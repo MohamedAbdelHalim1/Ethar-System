@@ -3,6 +3,36 @@
         <div class="bg-white shadow-md rounded p-6">
             <h2 class="text-xl font-semibold mb-4">All Locations</h2>
 
+            <form method="GET" action="{{ route('locations.index') }}" class="mb-4 flex items-center gap-4">
+                <div>
+                    <label for="from" class="block text-sm font-medium">From</label>
+                    <input type="date" name="from" id="from" value="{{ request('from') }}"
+                        class="border rounded px-2 py-1">
+                </div>
+
+                <div>
+                    <label for="to" class="block text-sm font-medium">To</label>
+                    <input type="date" name="to" id="to" value="{{ request('to') }}"
+                        class="border rounded px-2 py-1">
+                </div>
+
+                <div>
+                    <label for="availability" class="block text-sm font-medium">Availability</label>
+                    <select name="availability" id="availability" class="border rounded px-2 py-1">
+                        <option value="">-- All --</option>
+                        <option value="available" {{ request('availability') == 'available' ? 'selected' : '' }}>
+                            Available</option>
+                        <option value="not_available"
+                            {{ request('availability') == 'not_available' ? 'selected' : '' }}>Not Available</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-2 pt-6">
+                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Filter</button>
+                    <a href="{{ route('locations.index') }}" class="bg-gray-300 px-3 py-1 rounded">Reset</a>
+                </div>
+            </form>
+
             <table id="locations-table" class="min-w-full">
                 <thead>
                     <tr>
