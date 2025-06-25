@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Location;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
