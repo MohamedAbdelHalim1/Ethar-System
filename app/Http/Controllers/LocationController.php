@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    use Carbon\Carbon;
 
     public function index(Request $request)
     {
