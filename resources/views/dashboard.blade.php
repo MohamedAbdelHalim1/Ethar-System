@@ -2,10 +2,27 @@
 
     @push('styles')
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
 
-        <!-- DataTables CSS -->
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+        <style>
+            .table-responsive::-webkit-scrollbar {
+                height: 6px;
+            }
+
+            .table-responsive::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+            .table-responsive::-webkit-scrollbar-thumb {
+                background: #0ea5e9;
+                border-radius: 4px;
+            }
+
+            .table-responsive::-webkit-scrollbar-thumb:hover {
+                background: #0369a1;
+            }
+        </style>
     @endpush
 
     <div class="py-12">
@@ -146,8 +163,6 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- jQuery (لو مش موجود بالفعل) -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
         <!-- DataTables -->
@@ -155,6 +170,7 @@
 
         <!-- DataTables Buttons -->
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
         <script>
@@ -163,14 +179,16 @@
                     order: [
                         [14, 'desc']
                     ],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'colvis'
-                    ]
+                    dom: '<"d-flex justify-content-between align-items-center mb-2"Bf>rtip',
+                    buttons: [{
+                        extend: 'colvis',
+                        text: 'Columns'
+                    }]
                 });
             });
         </script>
     @endpush
+
 
 
 </x-app-layout>
