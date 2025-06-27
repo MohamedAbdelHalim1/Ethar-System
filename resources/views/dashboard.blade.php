@@ -19,21 +19,21 @@
                 <table id="brands-table" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Owner Name</th>
-                            <th>Owner Phone</th>
-                            <th>Type</th>
-                            <th>Value</th>
-                            <th>Sales Name</th>
-                            <th>Category</th>
-                            <th>Duration</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Days Left</th>
-                            <th>Location</th>
-                            <th>Drive Link</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Owner Name</th>
+                            <th class="text-nowrap">Owner Phone</th>
+                            <th class="text-nowrap">Type</th>
+                            <th class="text-nowrap">Value</th>
+                            <th class="text-nowrap">Sales Name</th>
+                            <th class="text-nowrap">Category</th>
+                            <th class="text-nowrap">Duration</th>
+                            <th class="text-nowrap">Start Date</th>
+                            <th class="text-nowrap">End Date</th>
+                            <th class="text-nowrap">Days Left</th>
+                            <th class="text-nowrap">Location</th>
+                            <th class="text-nowrap">Drive Link</th>
+                            <th class="text-nowrap">Status</th>
+                            <th class="text-nowrap">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
