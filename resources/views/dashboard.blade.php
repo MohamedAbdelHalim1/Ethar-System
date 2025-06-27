@@ -33,6 +33,7 @@
                             <th class="text-nowrap">Location</th>
                             <th class="text-nowrap">Drive Link</th>
                             <th class="text-nowrap">Status</th>
+                            <th class="text-nowrap">Created At</th>
                             <th class="text-nowrap">Actions</th>
                         </tr>
                     </thead>
@@ -110,6 +111,8 @@
                                     @endif
                                 </td>
 
+                                <td class="text-nowrap">{{ $brand->created_at }}</td>
+
                                 <td class="text-nowrap">
                                     <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-sm btn-primary">
                                         Edit
@@ -138,5 +141,15 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#brands-table').DataTable({
+                    order: [
+                        [14, 'desc']
+                    ]
+                });
+            });
+        </script>
     @endpush
+
 </x-app-layout>
