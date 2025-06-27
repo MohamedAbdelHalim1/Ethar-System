@@ -2,7 +2,12 @@
 
     @push('styles')
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
     @endpush
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
@@ -141,15 +146,31 @@
 
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- jQuery (لو مش موجود بالفعل) -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <!-- DataTables -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+        <!-- DataTables Buttons -->
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
         <script>
             $(document).ready(function() {
                 $('#brands-table').DataTable({
                     order: [
                         [14, 'desc']
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'colvis'
                     ]
                 });
             });
         </script>
     @endpush
+
 
 </x-app-layout>
