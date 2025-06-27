@@ -12,7 +12,7 @@
 
             <!-- جدول البراندات -->
             <div class="bg-white shadow-md rounded p-4 overflow-x-auto">
-                <table id="brands-table" class="min-w-full whitespace-nowrap">
+                <table id="brands-table" class="min-w-[1500px] whitespace-nowrap text-sm">
                     <thead>
                         <tr>
                             <th class="px-2 py-2 text-left">Name</th>
