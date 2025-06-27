@@ -140,6 +140,45 @@
                                         Edit
                                     </a>
 
+                                    @if ($brand->status === 'new')
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#contractModal" data-brand-id="{{ $brand->id }}">
+                                            Add Contract
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="contractModal" tabindex="-1"
+                                            aria-labelledby="contractModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form id="contractForm" method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="contractModalLabel">Upload
+                                                                Contract</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <input type="file" name="contract_file"
+                                                                accept="application/pdf" class="form-control" required>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">Upload</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @elseif ($brand->contract_file)
+                                        <a href="{{ asset('assets/contract-files/' . $brand->contract_file) }}"
+                                            class="btn btn-sm btn-success" target="_blank">
+                                            Download Contract
+                                        </a>
+                                    @endif
+
                                     <form class="d-inline" method="POST"
                                         action="{{ route('brands.destroy', $brand->id) }}"
                                         onsubmit="return confirm('Are you sure you want to delete this brand?')">
@@ -184,6 +223,15 @@
                         extend: 'colvis',
                         text: 'Columns'
                     }]
+                });
+            });
+
+            $(document).ready(function() {
+                $('#contractModal').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget)
+                    var brandId = button.data('brand-id')
+                    var url = "{{ url('brands') }}/" + brandId + "/upload-contract";
+                    $('#contractForm').attr('action', url);
                 });
             });
         </script>

@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('categories', CategoryController::class);
     Route::resource('brands', BrandController::class);
+    Route::post('brands/{brand}/upload-contract', [BrandController::class, 'uploadContract'])->name('brands.uploadContract');
     Route::get('/locations', [LocationController::class, 'index'])->name('locations.index');
     Route::get('/locations/{location}/calendar', [LocationController::class, 'calendar'])->name('locations.calendar');
 });

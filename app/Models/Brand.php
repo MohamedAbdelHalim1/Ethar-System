@@ -22,7 +22,8 @@ class Brand extends Model
         'subscription_duration',
         'start_date',
         'end_date',
-        'drive_link'
+        'drive_link',
+        'contract_file',
     ];
 
 

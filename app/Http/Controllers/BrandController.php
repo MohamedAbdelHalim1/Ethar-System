@@ -209,6 +209,32 @@ class BrandController extends Controller
         }
     }
 
+    public function uploadContract(Request $request, Brand $brand)
+    {
+        $request->validate([
+            'contract_file' => 'required|mimes:pdf|max:5120', // 5MB max
+        ]);
+
+        $file = $request->file('contract_file');
+
+        $filename = 'contract_' . $brand->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = public_path('assets/contract-files');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        $file->move($path, $filename);
+
+        $brand->update([
+            'contract_file' => $filename,
+            'status' => 'Contract Done',
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Contract uploaded successfully!');
+    }
+
+
 
 
     public function destroy(Brand $brand)
