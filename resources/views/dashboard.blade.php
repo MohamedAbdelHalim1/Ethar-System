@@ -36,6 +36,34 @@
                 </a>
             </div>
 
+            <!-- فلتر الحالة -->
+            <form method="GET" action="{{ route('brands.index') }}" class="row g-3 mb-4 align-items-end">
+
+                <div class="col-auto">
+                    <label for="status" class="form-label mb-0">Filter by Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">-- All --</option>
+                        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>New</option>
+                        <option value="Contract Done" {{ request('status') == 'Contract Done' ? 'selected' : '' }}>
+                            Contract Done</option>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">
+                        Filter
+                    </button>
+                </div>
+
+                <div class="col-auto">
+                    <a href="{{ route('brands.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+
+
             <!-- جدول البراندات -->
             <div class="table-responsive">
                 <table id="brands-table" class="table table-striped table-bordered table-hover">
@@ -128,6 +156,9 @@
                                 <td class="text-nowrap">
                                     @if ($brand->status === 'new')
                                         <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">New</span>
+                                    @elseif ($brand->status === 'Contract Done')
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Contract
+                                            Done</span>
                                     @else
                                         <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">-</span>
                                     @endif
@@ -160,7 +191,8 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <input type="file" name="contract_file"
-                                                                accept="application/pdf" class="form-control" required>
+                                                                accept="application/pdf" class="form-control"
+                                                                required>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"

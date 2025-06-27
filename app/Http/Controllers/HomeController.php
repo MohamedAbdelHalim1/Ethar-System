@@ -7,11 +7,18 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $brands = Brand::with(['category', 'locations'])
+        $query = Brand::with(['category', 'locations']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $brands = $query
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('dashboard', compact('brands'));
     }
 }
