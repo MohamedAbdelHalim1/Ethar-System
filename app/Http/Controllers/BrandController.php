@@ -45,6 +45,12 @@ class BrandController extends Controller
                 'category_id' => 'required|exists:categories,id',
                 'subscription_duration' => 'required|string',
                 'location_id' => 'required|exists:locations,id',
+                'owner_name' => 'nullable|string|max:255',
+                'owner_phone' => 'nullable|string|max:50',
+                'type' => 'nullable|in:rent,percentage',
+                'rent_value' => 'nullable|numeric',
+                'percentage_value' => 'nullable|numeric',
+                'sales_name' => 'nullable|string|max:255',
             ]);
 
             $range = explode(' to ', $request->date_range);
@@ -83,6 +89,12 @@ class BrandController extends Controller
                     'start_date' => $startDate,
                     'end_date' => $endDate,
                     'drive_link' => $request->drive_link,
+                    'owner_name' => $request->owner_name,
+                    'owner_phone' => $request->owner_phone,
+                    'type' => $request->type,
+                    'rent_value' => $request->rent_value,
+                    'percentage_value' => $request->percentage_value,
+                    'sales_name' => $request->sales_name,
                 ]);
 
                 $brand->locations()->attach($request->location_id, [

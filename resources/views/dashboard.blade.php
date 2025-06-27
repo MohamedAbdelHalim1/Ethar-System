@@ -16,6 +16,11 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Owner Name</th>
+                            <th>Owner Phone</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Sales Name</th>
                             <th>Category</th>
                             <th>Duration</th>
                             <th>Start Date</th>
@@ -23,6 +28,7 @@
                             <th>Days Left</th>
                             <th>Location</th>
                             <th>Drive Link</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -30,22 +36,37 @@
                         @foreach ($brands as $brand)
                             <tr>
                                 <td>{{ $brand->name }}</td>
+                                <td>{{ $brand->owner_name ?? '-' }}</td>
+                                <td>{{ $brand->owner_phone ?? '-' }}</td>
+                                <td>{{ $brand->type ?? '-' }}</td>
+                                <td>
+                                    @if ($brand->type === 'rent')
+                                        {{ $brand->rent_value ? number_format($brand->rent_value, 2) : '-' }}
+                                    @elseif ($brand->type === 'percentage')
+                                        {{ $brand->percentage_value ? number_format($brand->percentage_value, 2) . ' %' : '-' }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>{{ $brand->sales_name ?? '-' }}</td>
                                 <td>{{ $brand->category->name ?? '-' }}</td>
                                 <td>{{ $brand->subscription_duration }}</td>
                                 <td>{{ $brand->start_date }}</td>
                                 <td>{{ $brand->end_date }}</td>
+
                                 @php
                                     $daysLeft = today()->diffInDays(
                                         \Carbon\Carbon::parse($brand->end_date)->startOfDay(),
                                         false,
                                     );
-
                                 @endphp
+
                                 <td>
                                     @if ($daysLeft <= 0)
                                         <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Expired</span>
                                     @elseif ($daysLeft <= 1)
-                                        <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">{{ $daysLeft }}
+                                        <span
+                                            class="bg-red-500 text-white px-2 py-1 rounded text-xs">{{ $daysLeft }}
                                             day left</span>
                                     @elseif ($daysLeft <= 3)
                                         <span
@@ -58,7 +79,6 @@
                                     @endif
                                 </td>
 
-
                                 <td>
                                     @if ($brand->locations->count())
                                         {{ $brand->locations->pluck('number')->join(', ') }}
@@ -66,6 +86,7 @@
                                         -
                                     @endif
                                 </td>
+
                                 <td class="text-center">
                                     @if ($brand->drive_link)
                                         <a href="{{ $brand->drive_link }}" target="_blank"
@@ -74,6 +95,18 @@
                                         </a>
                                     @else
                                         -
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if ($brand->status === 'new')
+                                        <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">New</span>
+                                    @elseif ($brand->status === 'active')
+                                        <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Active</span>
+                                    @elseif ($brand->status === 'inactive')
+                                        <span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">Inactive</span>
+                                    @else
+                                        <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">-</span>
                                     @endif
                                 </td>
 
@@ -95,7 +128,6 @@
                                         </button>
                                     </form>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>

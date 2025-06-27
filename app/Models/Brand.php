@@ -11,12 +11,20 @@ class Brand extends Model
 
     protected $fillable = [
         'name',
+        'owner_name',
+        'owner_phone',
+        'type',
+        'rent_value',
+        'percentage_value',
+        'sales_name',
+        'status',
         'category_id',
         'subscription_duration',
         'start_date',
         'end_date',
         'drive_link'
     ];
+
 
     public function category()
     {
