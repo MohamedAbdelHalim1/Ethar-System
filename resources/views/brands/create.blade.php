@@ -61,18 +61,19 @@
                 </div>
 
                 <!-- Rent Value -->
-                <div class="mb-4" x-show="type == 'rent'">
+                <div class="mb-4" x-show="type == 'rent'" x-transition>
                     <label for="rent_value" class="block text-gray-700">Enter Rent Value</label>
                     <input type="number" step="0.01" name="rent_value" id="rent_value"
                         class="w-full border rounded px-3 py-2" value="{{ old('rent_value') }}">
                 </div>
 
                 <!-- Percentage Value -->
-                <div class="mb-4" x-show="type == 'percentage'">
+                <div class="mb-4" x-show="type == 'percentage'" x-transition>
                     <label for="percentage_value" class="block text-gray-700">Enter Percentage Value</label>
                     <input type="number" step="0.01" name="percentage_value" id="percentage_value"
                         class="w-full border rounded px-3 py-2" value="{{ old('percentage_value') }}">
                 </div>
+
 
                 <!-- Duration -->
                 <div class="mb-4">
