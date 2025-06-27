@@ -111,23 +111,21 @@
                                 </td>
 
                                 <td class="text-nowrap">
-                                    <!-- Edit button -->
-                                    <a href="{{ route('brands.edit', $brand->id) }}"
-                                        class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">
+                                    <a href="{{ route('brands.edit', $brand->id) }}" class="btn btn-sm btn-primary">
                                         Edit
                                     </a>
 
-                                    <!-- Delete button with confirmation -->
-                                    <form class="d-inline" method="POST" action="{{ route('brands.destroy', $brand->id) }}"
+                                    <form class="d-inline" method="POST"
+                                        action="{{ route('brands.destroy', $brand->id) }}"
                                         onsubmit="return confirm('Are you sure you want to delete this brand?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">
+                                        <button type="submit" class="btn btn-sm btn-danger">
                                             Delete
                                         </button>
                                     </form>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
