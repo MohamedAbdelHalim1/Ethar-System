@@ -113,7 +113,7 @@
                                 <td class="flex gap-2">
                                     <!-- Edit button -->
                                     <a href="{{ route('brands.edit', $brand->id) }}"
-                                        class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">
+                                        class="bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition">
                                         Edit
                                     </a>
 
@@ -123,7 +123,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">
+                                            class="bg-red-500 text-white rounded text-sm hover:bg-red-600 transition">
                                             Delete
                                         </button>
                                     </form>
