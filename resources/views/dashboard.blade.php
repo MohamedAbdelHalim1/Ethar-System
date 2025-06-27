@@ -1,4 +1,8 @@
 <x-app-layout>
+
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @endpush
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
@@ -11,35 +15,35 @@
             </div>
 
             <!-- جدول البراندات -->
-            <div class="bg-white shadow-md rounded p-4 overflow-x-auto">
-                <table id="brands-table" class="min-w-[1500px] whitespace-nowrap text-sm">
+            <div class="table-responsive">
+                <table id="brands-table" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th class="px-2 py-2 text-left">Name</th>
-                            <th class="px-2 py-2 text-left">Owner Name</th>
-                            <th class="px-2 py-2 text-left">Owner Phone</th>
-                            <th class="px-2 py-2 text-left">Type</th>
-                            <th class="px-2 py-2 text-left">Value</th>
-                            <th class="px-2 py-2 text-left">Sales Name</th>
-                            <th class="px-2 py-2 text-left">Category</th>
-                            <th class="px-2 py-2 text-left">Duration</th>
-                            <th class="px-2 py-2 text-left">Start Date</th>
-                            <th class="px-2 py-2 text-left">End Date</th>
-                            <th class="px-2 py-2 text-left">Days Left</th>
-                            <th class="px-2 py-2 text-left">Location</th>
-                            <th class="px-2 py-2 text-left">Drive Link</th>
-                            <th class="px-2 py-2 text-left">Status</th>
-                            <th class="px-2 py-2 text-left">Actions</th>
+                            <th>Name</th>
+                            <th>Owner Name</th>
+                            <th>Owner Phone</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Sales Name</th>
+                            <th>Category</th>
+                            <th>Duration</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days Left</th>
+                            <th>Location</th>
+                            <th>Drive Link</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($brands as $brand)
                             <tr>
-                                <td class="px-2 py-1">{{ $brand->name }}</td>
-                                <td class="px-2 py-1">{{ $brand->owner_name ?? '-' }}</td>
-                                <td class="px-2 py-1">{{ $brand->owner_phone ?? '-' }}</td>
-                                <td class="px-2 py-1">{{ $brand->type ?? '-' }}</td>
-                                <td class="px-2 py-1">
+                                <td>{{ $brand->name }}</td>
+                                <td>{{ $brand->owner_name ?? '-' }}</td>
+                                <td>{{ $brand->owner_phone ?? '-' }}</td>
+                                <td>{{ $brand->type ?? '-' }}</td>
+                                <td>
                                     @if ($brand->type === 'rent')
                                         {{ $brand->rent_value ? number_format($brand->rent_value, 2) : '-' }}
                                     @elseif ($brand->type === 'percentage')
@@ -48,11 +52,11 @@
                                         -
                                     @endif
                                 </td>
-                                <td class="px-2 py-1">{{ $brand->sales_name ?? '-' }}</td>
-                                <td class="px-2 py-1">{{ $brand->category->name ?? '-' }}</td>
-                                <td class="px-2 py-1">{{ $brand->subscription_duration }}</td>
-                                <td class="px-2 py-1">{{ $brand->start_date }}</td>
-                                <td class="px-2 py-1">{{ $brand->end_date }}</td>
+                                <td>{{ $brand->sales_name ?? '-' }}</td>
+                                <td>{{ $brand->category->name ?? '-' }}</td>
+                                <td>{{ $brand->subscription_duration }}</td>
+                                <td>{{ $brand->start_date }}</td>
+                                <td>{{ $brand->end_date }}</td>
 
                                 @php
                                     $daysLeft = today()->diffInDays(
@@ -61,7 +65,7 @@
                                     );
                                 @endphp
 
-                                <td class="px-2 py-1">
+                                <td>
                                     @if ($daysLeft <= 0)
                                         <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Expired</span>
                                     @elseif ($daysLeft <= 1)
@@ -79,7 +83,7 @@
                                     @endif
                                 </td>
 
-                                <td class="px-2 py-1">
+                                <td>
                                     @if ($brand->locations->count())
                                         {{ $brand->locations->pluck('number')->join(', ') }}
                                     @else
@@ -87,7 +91,7 @@
                                     @endif
                                 </td>
 
-                                <td class="px-2 py-1 text-center">
+                                <td class="text-center">
                                     @if ($brand->drive_link)
                                         <a href="{{ $brand->drive_link }}" target="_blank"
                                             class="text-blue-500 hover:text-blue-700">
@@ -98,13 +102,9 @@
                                     @endif
                                 </td>
 
-                                <td class="px-2 py-1">
+                                <td>
                                     @if ($brand->status === 'new')
                                         <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">New</span>
-                                    @elseif ($brand->status === 'active')
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Active</span>
-                                    @elseif ($brand->status === 'inactive')
-                                        <span class="bg-gray-400 text-white px-2 py-1 rounded text-xs">Inactive</span>
                                     @else
                                         <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">-</span>
                                     @endif
@@ -138,4 +138,7 @@
     </div>
 
 
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @endpush
 </x-app-layout>
