@@ -9,7 +9,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $brands = Brand::with(['category', 'locations'])->get();
+        $brands = Brand::with(['category', 'locations'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('dashboard', compact('brands'));
     }
 }
