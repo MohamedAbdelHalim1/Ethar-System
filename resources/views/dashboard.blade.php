@@ -37,7 +37,7 @@
             </div>
 
             <!-- فلتر الحالة -->
-            <form method="GET" action="{{ route('brands.index') }}" class="row g-3 mb-4 align-items-end">
+            <form method="GET" action="{{ route('dashboard') }}" class="row g-3 mb-4 align-items-end">
 
                 <div class="col-auto">
                     <label for="status" class="form-label mb-0">Filter by Status</label>
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="col-auto">
-                    <a href="{{ route('brands.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">
                         Reset
                     </a>
                 </div>
