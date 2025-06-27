@@ -39,11 +39,11 @@
                     <tbody>
                         @foreach ($brands as $brand)
                             <tr>
-                                <td>{{ $brand->name }}</td>
-                                <td>{{ $brand->owner_name ?? '-' }}</td>
-                                <td>{{ $brand->owner_phone ?? '-' }}</td>
-                                <td>{{ $brand->type ?? '-' }}</td>
-                                <td>
+                                <td class="text-nowrap">{{ $brand->name }}</td>
+                                <td class="text-nowrap">{{ $brand->owner_name ?? '-' }}</td>
+                                <td class="text-nowrap">{{ $brand->owner_phone ?? '-' }}</td>
+                                <td class="text-nowrap">{{ $brand->type ?? '-' }}</td>
+                                <td class="text-nowrap">
                                     @if ($brand->type === 'rent')
                                         {{ $brand->rent_value ? number_format($brand->rent_value, 2) : '-' }}
                                     @elseif ($brand->type === 'percentage')
@@ -52,11 +52,11 @@
                                         -
                                     @endif
                                 </td>
-                                <td>{{ $brand->sales_name ?? '-' }}</td>
-                                <td>{{ $brand->category->name ?? '-' }}</td>
-                                <td>{{ $brand->subscription_duration }}</td>
-                                <td>{{ $brand->start_date }}</td>
-                                <td>{{ $brand->end_date }}</td>
+                                <td class="text-nowrap">{{ $brand->sales_name ?? '-' }}</td>
+                                <td class="text-nowrap">{{ $brand->category->name ?? '-' }}</td>
+                                <td class="text-nowrap">{{ $brand->subscription_duration }}</td>
+                                <td class="text-nowrap">{{ $brand->start_date }}</td>
+                                <td class="text-nowrap">{{ $brand->end_date }}</td>
 
                                 @php
                                     $daysLeft = today()->diffInDays(
@@ -65,7 +65,7 @@
                                     );
                                 @endphp
 
-                                <td>
+                                <td class="text-nowrap">
                                     @if ($daysLeft <= 0)
                                         <span class="bg-red-500 text-white px-2 py-1 rounded text-xs">Expired</span>
                                     @elseif ($daysLeft <= 1)
@@ -83,7 +83,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td class="text-nowrap">
                                     @if ($brand->locations->count())
                                         {{ $brand->locations->pluck('number')->join(', ') }}
                                     @else
@@ -91,7 +91,7 @@
                                     @endif
                                 </td>
 
-                                <td class="text-center">
+                                <td class="text-center text-nowrap">
                                     @if ($brand->drive_link)
                                         <a href="{{ $brand->drive_link }}" target="_blank"
                                             class="text-blue-500 hover:text-blue-700">
@@ -102,7 +102,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td class="text-nowrap">
                                     @if ($brand->status === 'new')
                                         <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">New</span>
                                     @else
@@ -110,7 +110,7 @@
                                     @endif
                                 </td>
 
-                                <td class="d-flex gap-2 align-items-center">
+                                <td class="text-nowrap">
                                     <!-- Edit button -->
                                     <a href="{{ route('brands.edit', $brand->id) }}"
                                         class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition">
