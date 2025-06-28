@@ -44,7 +44,7 @@ class BrandController extends Controller
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
                 'subscription_duration' => 'required|string',
-                'location_id' => 'required|exists:locations,id',
+                'location_id' => 'nullable|exists:locations,id',
                 'owner_name' => 'nullable|string|max:255',
                 'owner_phone' => 'nullable|string|max:50',
                 'type' => 'nullable|in:rent,percentage',
@@ -97,10 +97,13 @@ class BrandController extends Controller
                     'sales_name' => $request->sales_name,
                 ]);
 
-                $brand->locations()->attach($request->location_id, [
-                    'start_date' => $startDate,
-                    'end_date' => $endDate,
-                ]);
+                if ($request->location_id) {
+                    $brand->locations()->attach($request->location_id, [
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                    ]);
+                }
+
 
                 return redirect()->route('dashboard')->with('success', 'Brand added successfully.');
             });
@@ -140,7 +143,7 @@ class BrandController extends Controller
                 'name' => 'required|string|max:255',
                 'category_id' => 'required|exists:categories,id',
                 'subscription_duration' => 'required|string',
-                'location_id' => 'required|exists:locations,id',
+                'location_id' => 'nullable|exists:locations,id',
                 'owner_name' => 'nullable|string|max:255',
                 'owner_phone' => 'nullable|string|max:50',
                 'type' => 'nullable|in:rent,percentage',
@@ -193,14 +196,16 @@ class BrandController extends Controller
                     'sales_name' => $request->sales_name,
                 ]);
 
-                // Remove old pivot if any
-                $brand->locations()->detach();
+                if ($request->location_id != $brand->location_id) {
+                    // Remove old pivot if any
+                    $brand->locations()->detach();
 
-                // Add new location with updated pivot
-                $brand->locations()->attach($request->location_id, [
-                    'start_date' => $startDate,
-                    'end_date' => $endDate,
-                ]);
+                    // Add new location with updated pivot
+                    $brand->locations()->attach($request->location_id, [
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                    ]);
+                }
 
                 return redirect()->route('dashboard')->with('success', 'Brand updated successfully.');
             });
