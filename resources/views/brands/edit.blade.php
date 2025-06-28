@@ -108,7 +108,7 @@
                 <!-- Location -->
                 <div class="mb-4">
                     <label for="location_id" class="block text-gray-700">Location</label>
-                    <select name="location_id" id="location_id" class="w-full border rounded px-3 py-2" required>
+                    <select name="location_id" id="location_id" class="w-full border rounded px-3 py-2">
                         <option value="">Select a location</option>
                         @foreach ($availableLocations as $location)
                             @php
