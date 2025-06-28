@@ -157,7 +157,7 @@
                                     @if ($brand->status === 'new')
                                         <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs">New</span>
                                     @elseif ($brand->status === 'Contract Done')
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded text-xs">Contract
+                                        <span class="badge bg-green-500 text-white px-2 py-1 rounded text-xs">Contract
                                             Done</span>
                                     @else
                                         <span class="bg-gray-200 text-gray-800 px-2 py-1 rounded text-xs">-</span>
